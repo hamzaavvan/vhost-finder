@@ -12,13 +12,6 @@ IFS=$'\n' read -rd '' -a hosts <<<"$raw"
 
 declare -A ips
 
-function store_array {
-	local var=$1 base_key=$2 values=("${@:3}")
-	for i in "${!values[@]}"; do
-		eval "$1[\$base_key|$i]=\${values[i]}"
-	done
-}
-
 for host in "${hosts[@]}"; do
 	echo -e "${RED}[+]${NC} $host"
 	raw_ip=$(dig +short "${host[0]}")
@@ -45,4 +38,3 @@ for ip in "${!ips[@]}"; do
 		echo "|_ $host"		
 	done
 done
-#echo "ARGS -> $@"
