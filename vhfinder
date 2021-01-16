@@ -3,28 +3,40 @@
 bold=$(tput bold)
 norm=$(tput sgr0)
 GREEN='\033[0;32m'
-RED='\033[0;33m'
+RED='\033[0;31m'
+BROWN='\033[0;33m'
 NC='\033[0m' # no color
 
 [ $# -ge 1 -a -f "$1" ] && input="$1" || input="-"
 raw=$(cat $input)
-IFS=$'\n' read -rd '' -a hosts <<<"$raw"
+raw=${raw//http:\/\//}
+raw=${raw//https:\/\//}
+raw=$(printf "$raw" | xargs -n1 | sort -u | xargs)
+IFS=$' ' read -rd '' -a hosts <<<"$raw"
 
 declare -A ips
 
 for host in "${hosts[@]}"; do
-	echo -e "${RED}[+]${NC} $host"
-	raw_ip=$(dig +short "${host[0]}")
+	host=$(printf $host | tr -d '\r')
+	echo -n -e "${BROWN}[+]${NC} $host"
 
-	if [[ $raw_ip != "" ]]; then
-		IFS=$'\n' read -rd '' -a ip <<<"$raw_ip"
-		fip=${ip[-1]}
-		isset=${ips[$fip]}
+	if [[ $host != "" ]]; then
+		raw_ip=$(dig +short "${host}")
 
-		if [[ $isset != "" ]]; then
-			ips[$fip]+=",$host"
+		if [[ $raw_ip != "" ]]; then
+			printf "\n"
+
+			IFS=$'\n' read -rd '' -a ip <<<"$raw_ip"
+			fip=${ip[-1]}
+			isset=${ips[$fip]}
+
+			if [[ $isset != "" ]]; then
+				ips[$fip]+=",$host"
+			else
+				ips[$fip]=$host
+			fi
 		else
-			ips[$fip]=$host
+			echo -e " ${RED}${bold}[IP Not Found]${norm}${NC}"
 		fi
 	fi
 done
