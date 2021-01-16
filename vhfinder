@@ -9,13 +9,13 @@ NC='\033[0m' # no color
 
 [ $# -ge 1 -a -f "$1" ] && input="$1" || input="-"
 raw=$(cat $input)
-raw=$(printf "$raw" | sed -E -e "s/(http|https)//g" | xargs -n1 | sort -u | xargs)
+raw=$(printf "$raw" | sed -E -e "s/(http|https):\/\///g" | xargs -n1 | sort -u | xargs)
 IFS=$' ' read -rd '' -a hosts <<<"$raw"
 
 declare -A ips
 
 for host in "${hosts[@]}"; do
-	host=$(printf $host | tr -d '\r')
+	host=$(printf "$host" | tr -d '\r')
 	echo -n -e "${BROWN}[+]${NC} $host"
 
 	if [[ $host != "" ]]; then
