@@ -9,7 +9,7 @@ NC='\033[0m' # no color
 
 [ $# -ge 1 -a -f "$1" ] && input="$1" || input="-"
 raw=$(cat $input)
-raw=$(printf "$raw" | sed -E -e "s/http(s|):\/\///g" | xargs -n1 | sort -u | xargs)
+raw=$(printf "$raw" | sed -E -e "s/https?:\/\///g" | xargs -n1 | sort -u | xargs)
 IFS=$' ' read -rd '' -a hosts <<<"$raw"
 
 declare -A ips
