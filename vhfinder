@@ -15,7 +15,7 @@ IFS=$' ' read -rd '' -a hosts <<<"$raw"
 declare -A ips
 
 for host in "${hosts[@]}"; do
-	host=$(printf "$host" | tr -d '\r')
+	host=$(printf "$host" | tr -d '\n')
 	echo -n -e "${BROWN}[+]${NC} $host"
 
 	if [[ $host != "" ]]; then
