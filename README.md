@@ -6,7 +6,14 @@
 
 
 ## Usage
+
+Set executable permission for script
 ```bash
+$ cd /vhost-finder
 $ chmod +x ./vhfinder
+```
+
+Run
+```bash
 $ cat domains.txt | ./vhfinder
 ```
