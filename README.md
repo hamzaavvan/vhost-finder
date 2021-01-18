@@ -7,5 +7,6 @@
 
 ## Usage
 ```bash
+$ chmod +x ./vhfinder
 $ cat domains.txt | ./vhfinder
 ```
